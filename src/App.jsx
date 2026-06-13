@@ -245,20 +245,25 @@ export default function App() {
     setShowContextPrompt(false);
     setShowRegenerateConfirm(false);
     try {
-      const result = await generateWords(appState.settings, context);
-      // Carry over "not yet" words from previous week if week just rolled
+      const currentSettings = appState.settings;
+      const result = await generateWords(currentSettings, context);
       const carried = appState.currentWeek?.words.filter(w => w.status === "pending") || [];
       let words = result.words.map(w => ({ ...w, status: "pending" }));
       if (carried.length > 0 && !appState.currentWeek) {
-        const carryCount = Math.min(carried.length, appState.settings.wordsPerPerson);
+        const carryCount = Math.min(carried.length, currentSettings.wordsPerPerson);
         words = [...carried.slice(0, carryCount), ...words.slice(0, words.length - carryCount)];
       }
       const newWeek = { theme: result.theme, words, weeklyContext: context, generatedAt: new Date().toISOString() };
-      const newState = { ...appState, currentWeek: newWeek, currentWeekId: getWeekId() };
-      setAppState(newState);
-      await saveState(newState);
-      await sendWeeklyEmail(appState.settings, newWeek);
-    } catch (e) { console.error("Generation failed", e); }
+      setAppState(prev => {
+        const newState = { ...prev, currentWeek: newWeek, currentWeekId: getWeekId() };
+        saveState(newState);
+        return newState;
+      });
+      await sendWeeklyEmail(currentSettings, newWeek);
+    } catch (e) {
+      console.error("Generation failed", e);
+      alert("Something went wrong generating words. Please try again.");
+    }
     setGenerating(false);
     setWeeklyContext("");
   }
