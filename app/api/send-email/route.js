@@ -8,7 +8,7 @@ export async function POST(request) {
   try {
     await sgMail.send({
       to,
-      from: 'YOUR_SHARED_EMAIL_HERE',
+      from: 'lizzandtheman@gmail.com',
       subject,
       text,
     })
