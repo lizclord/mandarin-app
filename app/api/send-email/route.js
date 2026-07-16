@@ -8,7 +8,7 @@ export async function POST(request) {
   try {
     await sgMail.send({
       to,
-      from: 'lizzandtheman@gmail.com',
+      from: { email: 'lizzandtheman@gmail.com', name: '中文 Weekly' },
       subject,
       html,
     })
