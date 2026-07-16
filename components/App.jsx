@@ -5,14 +5,14 @@ const STORAGE_KEY = "mandarinApp_v2";
 
 async function loadState() {
   try {
-    const r = await window.storage.get(STORAGE_KEY);
-    return r ? JSON.parse(r.value) : null;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch { return null; }
 }
 
 async function saveState(state) {
   try {
-    await window.storage.set(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (e) { console.error("Save failed", e); }
 }
 
