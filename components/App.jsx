@@ -5,14 +5,16 @@ const STORAGE_KEY = "mandarinApp_v2";
 
 async function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    if (typeof window === "undefined") return null;
+    const raw = window.localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch { return null; }
 }
 
 async function saveState(state) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (e) { console.error("Save failed", e); }
 }
 
@@ -101,11 +103,15 @@ function getAgeInMonths(dob) {
 
 function getWeekId() {
   const now = new Date();
-  const day = now.getDay();
-  const diff = day === 6 ? 0 : day + 1;
+  const day = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  // Days since last Saturday: Sat=0, Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6
+  const daysSinceSat = day === 6 ? 0 : day + 1;
   const sat = new Date(now);
-  sat.setDate(now.getDate() - diff);
-  return sat.toISOString().slice(0, 10);
+  sat.setDate(now.getDate() - daysSinceSat);
+  const yyyy = sat.getFullYear();
+  const mm = String(sat.getMonth() + 1).padStart(2, '0');
+  const dd = String(sat.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 // ── AI word generation ───────────────────────────────────────────
