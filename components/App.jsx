@@ -97,7 +97,7 @@ async function generateWords(settings, context = "", lastWeekWords = [], seenSim
     : `Generate ${totalWords} evergreen words for daily family life with young children.`;
 
   const prompt = `You are helping a family build a Mandarin habit in their English-speaking household.
-Family: ${settings.userName} (fluent Mandarin), ${settings.partnerName} (beginner).
+Family: two adults — one fluent Mandarin speaker, one beginner.
 Children: ${childrenDesc}.
 ${siblingNote}
 ${lastWeekNote}
@@ -107,7 +107,7 @@ ${splitNote}
 
 Rules:
 - Practical, high-frequency words usable naturally day-to-day
-- DIFFICULTY MIX IS MANDATORY: exactly half the words must be simple and concrete (single syllable, high-frequency — suited for a beginner like ${settings.partnerName}), and exactly half must be more nuanced and conversational (2-3 syllable phrases — suited for a fluent speaker like ${settings.userName} who wants richer vocabulary to use naturally). Examples of simple: 吃, 走, 看, 哭, 抱. Examples of nuanced: 輕輕, 好了, 一起, 沒關係, 等一下. Do not generate all simple or all complex words.
+- DIFFICULTY MIX IS MANDATORY: exactly half the words must be simple and concrete (single syllable, high-frequency — e.g. 吃, 走, 看, 哭, 抱), and exactly half must be more nuanced and conversational (2-3 syllable phrases — e.g. 輕輕, 好了, 一起, 沒關係, 等一下). Do not generate all simple or all complex words. Do NOT mention any person's name anywhere in the output — not in tips, not in sample sentences, not anywhere.
 - Each word needs a very specific usage tip (exactly WHEN and HOW to say it during the day — be concrete). NEVER mention any family member's name in the tip — use "you" instead.
 - Include a short sample sentence with pinyin and English translation
 - Word IDs must be unique strings: "w1", "w2", etc.
