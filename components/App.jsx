@@ -179,8 +179,11 @@ Respond ONLY with valid JSON, no markdown, no explanation:
     }),
   });
   const data = await response.json();
+  console.log("API response:", JSON.stringify(data));
+  if (!data.content) throw new Error("No content: " + JSON.stringify(data));
   const text = data.content.map(b => b.text || "").join("");
   const clean = text.replace(/```json|```/g, "").trim();
+  console.log("Parsed text:", clean);
   return JSON.parse(clean);
 }
 
