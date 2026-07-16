@@ -18,68 +18,60 @@ async function saveState(state) {
   } catch (e) { console.error("Save failed", e); }
 }
 
-// ── EmailJS ──────────────────────────────────────────────────────
-const EMAILJS_SERVICE_ID = "service_39ky8mj";
-const EMAILJS_PUBLIC_KEY = "ps2g8AOw9DP8q4Z38";
-const TEMPLATE_WEEKLY = "template_0tgdwgn";
-const TEMPLATE_DAILY = "template_ei8go9n";
-const TEMPLATE_REVIEW = null;
-
-async function sendEmail(templateId, params) {
-  if (!templateId) return;
-  try {
-    await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        service_id: EMAILJS_SERVICE_ID,
-        template_id: templateId,
-        user_id: EMAILJS_PUBLIC_KEY,
-        template_params: params,
-      }),
-    });
-  } catch (e) { console.error("Email failed", e); }
-}
+// ── Email via Sendgrid ──────────────────────────────────────────
+const FROM_EMAIL = "lizzandtheman@gmail.com";
 
 function formatWordsForEmail(words) {
-  return words.map(w => `${w.simplified} (${w.pinyin}) — ${w.english}\n${w.tip}`).join("\n\n");
+  return words.map(w => `${w.simplified} / ${w.traditional} (${w.pinyin}) — ${w.english}\n💡 ${w.tip}\n📝 ${w.sampleSentence}`).join("\n\n");
+}
+
+async function sendEmail(to, subject, text) {
+  try {
+    await fetch("/api/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ to, subject, text }),
+    });
+  } catch (e) { console.error("Email failed", e); }
 }
 
 async function sendWeeklyEmail(settings, week) {
   const lizWords = week.words.filter(w => w.assignedTo === "liz");
   const richWords = week.words.filter(w => w.assignedTo === "rich");
+
   if (settings.lizEmail) {
-    await sendEmail(TEMPLATE_WEEKLY, {
-      to_email: settings.lizEmail, to_name: settings.lizName,
-      partner_name: settings.richName, theme: week.theme,
-      my_words: formatWordsForEmail(lizWords), partner_words: formatWordsForEmail(richWords),
-    });
+    await sendEmail(
+      settings.lizEmail,
+      `🈶 This week's Mandarin — ${week.theme}`,
+      `Hi ${settings.lizName},\n\nHere are your words for this week.\n\nTheme: ${week.theme}${week.weeklyContext ? ` (${week.weeklyContext})` : ""}\n\nYOUR WORDS:\n\n${formatWordsForEmail(lizWords)}\n\n${settings.richName}'s WORDS:\n\n${formatWordsForEmail(richWords)}\n\nGood luck this week! 加油！`
+    );
   }
   if (settings.richEmail) {
-    await sendEmail(TEMPLATE_WEEKLY, {
-      to_email: settings.richEmail, to_name: settings.richName,
-      partner_name: settings.lizName, theme: week.theme,
-      my_words: formatWordsForEmail(richWords), partner_words: formatWordsForEmail(lizWords),
-    });
+    await sendEmail(
+      settings.richEmail,
+      `🈶 This week's Mandarin — ${week.theme}`,
+      `Hi ${settings.richName},\n\nHere are your words for this week.\n\nTheme: ${week.theme}${week.weeklyContext ? ` (${week.weeklyContext})` : ""}\n\nYOUR WORDS:\n\n${formatWordsForEmail(richWords)}\n\n${settings.lizName}'s WORDS:\n\n${formatWordsForEmail(lizWords)}\n\nGood luck this week! 加油！`
+    );
   }
 }
 
 async function sendDailyEmail(settings, week) {
   const lizWords = week.words.filter(w => w.assignedTo === "liz");
   const richWords = week.words.filter(w => w.assignedTo === "rich");
+
   if (settings.lizEmail) {
-    await sendEmail(TEMPLATE_DAILY, {
-      to_email: settings.lizEmail, to_name: settings.lizName,
-      partner_name: settings.richName,
-      my_words: formatWordsForEmail(lizWords), partner_words: formatWordsForEmail(richWords),
-    });
+    await sendEmail(
+      settings.lizEmail,
+      `今日 · Your Mandarin reminder`,
+      `Hi ${settings.lizName},\n\nYour words today:\n\n${formatWordsForEmail(lizWords)}\n\n${settings.richName} is working on:\n\n${formatWordsForEmail(richWords)}\n\n加油！`
+    );
   }
   if (settings.richEmail) {
-    await sendEmail(TEMPLATE_DAILY, {
-      to_email: settings.richEmail, to_name: settings.richName,
-      partner_name: settings.lizName,
-      my_words: formatWordsForEmail(richWords), partner_words: formatWordsForEmail(lizWords),
-    });
+    await sendEmail(
+      settings.richEmail,
+      `今日 · Your Mandarin reminder`,
+      `Hi ${settings.richName},\n\nYour words today:\n\n${formatWordsForEmail(richWords)}\n\n${settings.lizName} is working on:\n\n${formatWordsForEmail(lizWords)}\n\n加油！`
+    );
   }
 }
 
