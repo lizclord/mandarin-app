@@ -107,6 +107,7 @@ ${splitNote}
 
 Rules:
 - Practical, high-frequency words usable naturally day-to-day
+- Mix difficulty: half the words should be simple (single syllable, very concrete — e.g. 吃, 走, 看), half slightly more nuanced (short phrases or conversational — e.g. 輕輕, 好了, 一起). For a single word, pick whichever fits best.
 - Each word needs a very specific usage tip (exactly WHEN and HOW to say it during the day — be concrete)
 - Include a short sample sentence with pinyin and English translation
 - Word IDs must be unique strings: "w1", "w2", etc.
