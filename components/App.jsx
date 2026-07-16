@@ -107,7 +107,7 @@ ${splitNote}
 
 Rules:
 - Practical, high-frequency words usable naturally day-to-day
-- Mix difficulty: half the words should be simple (single syllable, very concrete — e.g. 吃, 走, 看), half slightly more nuanced (short phrases or conversational — e.g. 輕輕, 好了, 一起). For a single word, pick whichever fits best.
+- DIFFICULTY MIX IS MANDATORY: exactly half the words must be simple and concrete (single syllable, high-frequency — suited for a beginner like ${settings.partnerName}), and exactly half must be more nuanced and conversational (2-3 syllable phrases — suited for a fluent speaker like ${settings.userName} who wants richer vocabulary to use naturally). Examples of simple: 吃, 走, 看, 哭, 抱. Examples of nuanced: 輕輕, 好了, 一起, 沒關係, 等一下. Do not generate all simple or all complex words.
 - Each word needs a very specific usage tip (exactly WHEN and HOW to say it during the day — be concrete)
 - Include a short sample sentence with pinyin and English translation
 - Word IDs must be unique strings: "w1", "w2", etc.
@@ -692,7 +692,7 @@ function SettingsScreen({ appState, onUpdateState }) {
 
       <SettingsSection title="Words per week">
         <div style={{ padding: "12px 16px", display: "flex", gap: 8 }}>
-          {[2, 3, 4].map(n => (
+          {[4, 6, 8].map(n => (
             <button key={n} onClick={() => handleChange("wordsPerWeek", n)} style={{
               flex: 1, padding: "10px 0", borderRadius: 10,
               border: `1.5px solid ${form.wordsPerWeek === n ? C.navy : C.border}`,
