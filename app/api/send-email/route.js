@@ -3,16 +3,18 @@ import sgMail from '@sendgrid/mail'
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 export async function POST(request) {
-  const { to, subject, text } = await request.json()
+  const { to, subject, html } = await request.json()
 
   try {
     await sgMail.send({
       to,
       from: 'lizzandtheman@gmail.com',
       subject,
-      text,
+      html,
     })
     return Response.json({ success: true })
   } catch (e) {
     console.error('Sendgrid error:', e.response?.body || e.message)
-    return Response.json({ error:
+    return Response.json({ error: e.message }, { status: 500 })
+  }
+}
