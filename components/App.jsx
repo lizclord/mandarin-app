@@ -744,6 +744,20 @@ function SettingsScreen({ appState, onUpdateState }) {
           {shareStatus && <div style={{ fontSize: 13, color: C.muted, textAlign: "center", marginTop: 8 }}>{shareStatus}</div>}
         </div>
       </SettingsSection>
+
+      {/* Reset — testing only */}
+      <div style={{ textAlign: "center", marginTop: 16, paddingBottom: 8 }}>
+        <button onClick={() => {
+          if (window.confirm("Reset this week's words? This can't be undone.")) {
+            const saved = JSON.parse(localStorage.getItem("mandarinApp_v4") || "{}");
+            const reset = { ...saved, currentWeek: null, confirmed: false };
+            localStorage.setItem("mandarinApp_v4", JSON.stringify(reset));
+            window.location.reload();
+          }
+        }} style={{ background: "none", border: "none", color: C.border, fontSize: 11, cursor: "pointer", textDecoration: "underline", letterSpacing: 0.5 }}>
+          reset this week
+        </button>
+      </div>
     </div>
   );
 }
