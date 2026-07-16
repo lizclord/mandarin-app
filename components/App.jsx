@@ -468,6 +468,7 @@ function WeekScreen({ appState, onUpdateState }) {
     const ok = await sendConfirmationEmail(appState.settings, appState.currentWeek);
     await onUpdateState({ confirmed: true });
     if (!ok) setConfirmError("Words confirmed but email failed to send. Try resending from Settings.");
+    else setConfirmError("✓ Email sent — check your spam folder if you don't see it.");
     setConfirming(false);
   }
 
@@ -724,11 +725,11 @@ function SettingsScreen({ appState, onUpdateState }) {
             </div>
           )}
           <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 10, opacity: emailsFilled ? 1 : 0.4, pointerEvents: emailsFilled ? "auto" : "none" }}>
-            <button onClick={async () => { setEmailStatus("Sending…"); await sendConfirmationEmail(appState.settings, appState.currentWeek); setEmailStatus("Sent ✓"); setTimeout(() => setEmailStatus(""), 3000); }}
+            <button onClick={async () => { setEmailStatus("Sending…"); await sendConfirmationEmail(appState.settings, appState.currentWeek); setEmailStatus("Sent ✓ — check spam if you don't see it"); setTimeout(() => setEmailStatus(""), 4000); }}
               style={{ padding: "10px 0", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "none", color: C.navy, fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
               Resend this week's words
             </button>
-            <button onClick={async () => { setEmailStatus("Sending…"); await sendMidweekEmail(appState.settings, appState.currentWeek); setEmailStatus("Sent ✓"); setTimeout(() => setEmailStatus(""), 3000); }}
+            <button onClick={async () => { setEmailStatus("Sending…"); await sendMidweekEmail(appState.settings, appState.currentWeek); setEmailStatus("Sent ✓ — check spam if you don't see it"); setTimeout(() => setEmailStatus(""), 4000); }}
               style={{ padding: "10px 0", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "none", color: C.navy, fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
               Send midweek reminder now
             </button>
